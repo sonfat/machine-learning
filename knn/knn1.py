@@ -42,6 +42,14 @@ def load_user_cmd(filename):
     dist_min = set(fdist[-50:])   #最不常用Top50
     return cmd_list, dist_max, dist_min  #cmd_list为100大小的block块集合
 
+def test_func(user_cmd_list, dist_max, dist_min):
+    a = []
+    for cmd_block in user_cmd_list:
+        f1 = len(set(cmd_block))
+        fdist = FreqDist(cmd_block).keys()
+        a.append(fdist)
+    return a
+
 def get_user_cmd_feature(user_cmd_list, dist_max, dist_min):
     user_cmd_feature = []
     for cmd_block in user_cmd_list:
@@ -61,7 +69,35 @@ def get_label(filename, index=0):
         for line in f:
             line = line.strip('\n')
             x.append(int(line.split()[index]))
+    return x
 
 if __name__ == '__main__':
-    user_cmd_list, user_cmd_dist_max, user_cmd_dist_min = load_user_cmd("./MasqueradeDat/User3")
+    user_cmd_list, user_cmd_dist_max, user_cmd_dist_min = load_user_cmd("./User3") #分别得到全部命令列表、最常用和最不常用50命令
     user_cmd_feature = get_user_cmd_feature(user_cmd_list, user_cmd_dist_max, user_cmd_dist_min)
+    labels = get_label('./label.txt',2)
+    # print labels
+    # b = test_func(user_cmd_list, user_cmd_dist_max, user_cmd_dist_min)
+    # print b
+
+    #前5000条记录为正常操作，将前50个序列置0
+    y = [0] * 50 + labels
+    ##########################################################
+    x_train = user_cmd_feature[0:N]
+    y_train = y[0:N]
+
+    x_test = user_cmd_feature[N:150]
+    y_test = y[N:150]
+
+    neigh = KNeighborsClassifier(n_neighbors=3)
+    neigh.fit(x_train, y_train)
+    y_predicet = neigh.predict(x_test)
+
+    score = np.mean(y_test==y_predicet)*100
+
+    print y_test
+    print y_predicet
+    print score
+
+    print classification_report(y_test, y_predicet)
+
+    print metrics.confusion_matrix(y_test, y_predicet)
