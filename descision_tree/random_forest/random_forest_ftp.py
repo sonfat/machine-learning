@@ -55,7 +55,7 @@ if __name__ == "__main__":
 
     x = training_x1 + hydra_x1
     y = training_y1 + hydra_y1
-    # print x
+    # print xore)
     # print y
     cv = CountVectorizer(min_df=1)
     x = cv.fit_transform(x)
@@ -64,4 +64,11 @@ if __name__ == "__main__":
     #  决策树
     clf1 = tree.DecisionTreeClassifier()
     score = cross_val_score(clf1, x, y, n_jobs=1, cv=10)
+    print score
+    print np.mean(score)
+
+    #随机森林
+    clf2 = RandomForestClassifier(n_estimators=100, max_depth=None, min_samples_split=2, random_state=0)
+    score = cross_val_score(clf2, x, y, n_jobs=1, cv=10)
+    print score
     print np.mean(score)
