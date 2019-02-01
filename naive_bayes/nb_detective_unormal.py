@@ -16,7 +16,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
 
-N = 90
+N = 149
 
 def load_user_cmd_new(filename):
     cmd_list = []
@@ -105,13 +105,13 @@ if __name__ == "__main__":
     neigh.fit(x_train, y_train)
     y_pred_knn = neigh.predict(x_test)
     knn_score =  np.mean(y_test == y_pred_knn) *100
-    print y_test
-    print y_pred_knn
+    # print len(y_test)
+    # print len(y_pred_knn)
 
     # 朴素贝叶斯算法
-            # clf = GaussianNB().fit(x_train, y_train)
-            # y_pred_bayes = clf.predict(x_test)
-            # bayes_score = np.mean(y_test == y_pred_bayes) *100
-            #
-            # print "Knn score : "+ str(knn_score)
-            # print "NB score : " + str(bayes_score)
+    clf = GaussianNB().fit(x_train, y_train)
+    y_pred_bayes = clf.predict(x_test)
+    bayes_score = np.mean(y_test == y_pred_bayes) *100
+
+    print "Knn score : "+ str(knn_score)
+    print "NB score : " + str(bayes_score)
