@@ -8,6 +8,7 @@ from sklearn import svm
 from sklearn.externals import joblib
 from sklearn.metrics import classification_report
 from sklearn import metrics
+from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_score
 
 # 以包括但不限于以下的维度作为参数判别XSS攻击：
@@ -72,3 +73,32 @@ def do_metrics(y_test, y_predict):
 
     print "f1得分:"
     print metrics.f1_score(y_test, y_predict)
+
+def etl(filename, data, isxss):
+    with open(filename) as f:
+        for line in f:
+            fea1 = get_len(line)
+            fea2 = get_url_count(line)
+            fea3 = get_evil_char(line)
+            fea4 = get_evil_word(line)
+            data.append([fea1, fea2, fea3, fea4])
+            if isxss:
+                y.append(1)
+            else:
+                y.append(0)
+    return data
+
+
+etl('F:/1book-master/code/9-2/xss-200000.txt', x, 1)
+etl('F:/1book-master/code/9-2/good-xss-200000.txt', x, 0)
+x_train, x_test, y_train, y_test = train_test_split(x,y, test_size=0.4, random_state=0)
+
+clf = svm.SVC(kernel='linear', C=1)
+clf.fit(x_train, y_train)
+y_predict = clf.predict(x_test)
+do_metrics(y_test, y_predict)
+print "============================================================================="
+clf = svm.SVC(kernel='linear', C=2)
+clf.fit(x_train, y_train)
+y_predict = clf.predict(x_test)
+do_metrics(y_test, y_predict)
