@@ -53,6 +53,41 @@ def do_str(line):
     print words
 
 def main(filename):
+    X = [0]
+    X_lens = [1]
+    with open(filename) as f:
+        for line in f:
+            line = line.strip('\n')
+            line = urllib.unquote(line) #
+            h = HTMLParser.HTMLParser()
+            line = h.unescape(line)
+            if len(line) >= MIN_LEN:
+                print "Learning xss query param:(%s)" % line
+                do_str(line)
 
-test = 'i love you. motherfucker'
-do_str(test)
+
+def test(remodel, filename):
+    with open(filename) as f:
+        for line in f:
+            result = urlparse.urlparse(line)
+            query = urllib.unquote(result.query)
+            params = urlparse.parse_qsl(query, True)
+            for k, v in params:
+
+                if ischeck(v) and len(v) >= N:
+                    vers = etl(v)
+                    pro = remodel.score(vers)
+                    # print  "CHK SCORE:(%d) QUREY_PARAM:(%s) XSS_URL:(%s) " % (pro, v, line)
+                    if pro >= T:
+                        print  "SCORE:(%d) QUREY_PARAM:(%s) XSS_URL:(%s) " % (pro, v, line)
+                        # print line
+
+
+if __name__ == '__main__':
+    #remodel=main(sys.argv[1])
+    #test(remodel,sys.argv[2])
+    nltk.download()
+    main(sys.argv[1])
+# test_payload = '/0_1/api.php?op=map&maptype=1&city=test%3Cscript%3Ealert%28/42873/%29%3C/script%3E'
+# a = test_str(test_payload)
+# print a
