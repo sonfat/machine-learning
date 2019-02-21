@@ -1,0 +1,6 @@
+题目：We started a little store [1] , can you buy the flag? Source 
+
+Connecting: nc 2018shell2.picoctf.com 53220.
+
+Hints:
+(1) Two's compliment can do some weird things when numbers get really big!
