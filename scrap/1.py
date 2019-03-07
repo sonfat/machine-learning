@@ -1,6 +1,8 @@
 import requests
-url  = "http://thzvv.net/thread-1946336-1-2.html"
-res = requests.get(url).text
+url  = "http://thzvv.net/forum.php?mod=attachment&aid=MzIyNTkwfGFjNDhjNTlhfDE1NTE5MjcxNjF8MHw3NDMxNTM="
+res = requests.get(url).content
+with open("F:/test.torrent","wb") as f:
+    f.write(res)
 print res
 
 
